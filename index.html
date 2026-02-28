@@ -6,9 +6,11 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>ระบบจัดการงบประมาณ</title>
+    
     <link rel="apple-touch-icon" sizes="180x180" href="logo-icon.png">
     <link rel="icon" type="image/png" sizes="192x192" href="logo-icon.png">
     <link rel="icon" type="image/png" href="logo-icon.png">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
@@ -110,15 +112,14 @@
             transform: scale(0.95);
         }
 
-        .btn-report-line {
-            background-color: var(--line-green);
-            color: white;
-            border: none;
+        .btn-report-line { background-color: var(--line-green); color: white; border: none; }
+        .btn-report-tg { background-color: var(--telegram-blue); color: white; border: none; }
+        
+        .action-btns button {
+            transition: 0.2s;
         }
-        .btn-report-tg {
-            background-color: var(--telegram-blue);
-            color: white;
-            border: none;
+        .action-btns button:active {
+            transform: scale(0.95);
         }
     </style>
 </head>
@@ -163,20 +164,14 @@
             </div>
         </div>
 
-        <button class="main-add-btn mb-4" data-bs-toggle="modal" data-bs-target="#addExpenseModal">
-            <i class="fas fa-plus-circle me-2"></i>บันทึกจ่ายเงิน
+        <button class="main-add-btn mb-4" data-bs-toggle="modal" data-bs-target="#addExpenseModal" onclick="resetExpenseModal()">
+            <i class="fas fa-plus-circle me-2"></i>บันทึกจ่ายเงินด่วน
         </button>
 
         <ul class="nav nav-pills nav-fill mb-3 bg-white p-1 rounded-pill shadow-sm" id="pills-tab">
-            <li class="nav-item">
-                <button class="nav-link active rounded-pill text-danger" data-bs-toggle="pill" data-bs-target="#tab-overview">ภาพรวม</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link rounded-pill text-danger" data-bs-toggle="pill" data-bs-target="#tab-history">ประวัติ</button>
-            </li>
-            <li class="nav-item">
-                <button class="nav-link rounded-pill text-danger" data-bs-toggle="pill" data-bs-target="#tab-manage">จัดการงบ</button>
-            </li>
+            <li class="nav-item"><button class="nav-link active rounded-pill text-danger" data-bs-toggle="pill" data-bs-target="#tab-overview">ภาพรวม</button></li>
+            <li class="nav-item"><button class="nav-link rounded-pill text-danger" data-bs-toggle="pill" data-bs-target="#tab-history">ประวัติ</button></li>
+            <li class="nav-item"><button class="nav-link rounded-pill text-danger" data-bs-toggle="pill" data-bs-target="#tab-manage">จัดการงบ</button></li>
         </ul>
 
         <div class="tab-content">
@@ -200,33 +195,17 @@
                             <input type="text" class="form-control" id="newCatName" placeholder="เช่น ค่าอะไหล่">
                         </div>
                         <div class="row mb-2">
-                            <div class="col-6">
-                                <label class="small text-muted">ประเภท</label>
-                                <select class="form-select" id="newCatType">
-                                    <option value="main">หมวดหลัก</option>
-                                    <option value="sub">หมวดย่อย</option>
-                                </select>
-                            </div>
-                            <div class="col-6">
-                                <label class="small text-muted">งบ (บาท)</label>
-                                <input type="number" class="form-control" id="newCatBudget" placeholder="0">
-                            </div>
+                            <div class="col-6"><label class="small text-muted">ประเภท</label><select class="form-select" id="newCatType"><option value="main">หมวดหลัก</option><option value="sub">หมวดย่อย</option></select></div>
+                            <div class="col-6"><label class="small text-muted">งบ (บาท)</label><input type="number" class="form-control" id="newCatBudget" placeholder="0"></div>
                         </div>
-                        <div class="mb-3" id="parentCatGroup" style="display:none;">
-                            <label class="small text-muted">อยู่ภายใต้หมวด</label>
-                            <select class="form-select" id="newCatParent"></select>
-                        </div>
+                        <div class="mb-3" id="parentCatGroup" style="display:none;"><label class="small text-muted">อยู่ภายใต้หมวด</label><select class="form-select" id="newCatParent"></select></div>
                         <button class="btn btn-danger w-100 rounded-pill" id="btnAddCategory">ยืนยันสร้าง</button>
                     </div>
                 </div>
 
                 <div class="card p-3">
-                     <button class="btn btn-outline-secondary w-100 mb-2" id="btnCopyBudget">
-                        <i class="fas fa-copy me-2"></i>คัดลอกงบจากเดือนที่แล้ว
-                    </button>
-                    <button class="btn btn-outline-danger w-100" id="btnReset">
-                        <i class="fas fa-trash me-2"></i>ล้างข้อมูลทั้งหมด
-                    </button>
+                     <button class="btn btn-outline-secondary w-100 mb-2" id="btnCopyBudget"><i class="fas fa-copy me-2"></i>คัดลอกงบจากเดือนที่แล้ว</button>
+                    <button class="btn btn-outline-danger w-100" id="btnReset"><i class="fas fa-trash me-2"></i>ล้างข้อมูลทั้งหมด</button>
                 </div>
             </div>
         </div>
@@ -264,9 +243,22 @@
     <div class="modal fade" id="editBudgetModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header"><h5 class="modal-title">แก้ไขหมวดหมู่</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                <div class="modal-body"><input type="hidden" id="editCatId"><div class="mb-3"><label>ชื่อหมวดหมู่</label><input type="text" class="form-control" id="editCatName"></div><div class="mb-3"><label>งบประมาณ</label><input type="number" class="form-control" id="editCatBudget"></div></div>
-                <div class="modal-footer"><button type="button" class="btn btn-outline-danger me-auto" id="btnDeleteCat">ลบ</button><button type="button" class="btn btn-primary" id="btnUpdateCat">บันทึก</button></div>
+                <div class="modal-header bg-light">
+                    <h5 class="modal-title"><i class="fas fa-edit text-primary me-2"></i>แก้ไขงบประมาณ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editCatId">
+                    <div class="mb-3"><label class="text-muted small">ชื่อหมวดหมู่</label><input type="text" class="form-control" id="editCatName"></div>
+                    <div class="mb-3">
+                        <label class="text-muted small">ยอดงบประมาณ (บาท)</label>
+                        <input type="number" class="form-control form-control-lg text-primary fw-bold" id="editCatBudget" inputmode="decimal">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger me-auto" id="btnDeleteCat">ลบหมวดหมู่นี้</button>
+                    <button type="button" class="btn btn-primary px-4" id="btnUpdateCat">บันทึกการแก้ไข</button>
+                </div>
             </div>
         </div>
     </div>
@@ -274,43 +266,27 @@
     <div class="modal fade" id="menuModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header bg-light">
-                    <h5 class="modal-title"><i class="fas fa-bars me-2"></i>เมนูจัดการ</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
+                <div class="modal-header bg-light"><h5 class="modal-title"><i class="fas fa-bars me-2"></i>เมนูจัดการ</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
                 <div class="modal-body">
                     <div class="card p-3 mb-3 bg-white border shadow-sm">
                         <label class="fw-bold mb-2"><i class="fas fa-edit me-2"></i>ตั้งชื่อสถานีบริการ</label>
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="stationNameInput" placeholder="เช่น ปั๊มลุงมี">
-                            <button class="btn btn-primary" onclick="saveStationName()">บันทึก</button>
-                        </div>
+                        <div class="input-group"><input type="text" class="form-control" id="stationNameInput" placeholder="เช่น ปั๊มลุงมี"><button class="btn btn-primary" onclick="saveStationName()">บันทึก</button></div>
                         <small class="text-muted mt-1">ชื่อนี้จะโชว์ในหัวข้อและรายงานไลน์</small>
                     </div>
 
                     <h6 class="text-muted mb-3">รายงานสรุป (One-Click Report)</h6>
                     <div class="d-grid gap-2 mb-4">
-                        <button class="btn btn-report-line p-3 rounded-pill fw-bold" onclick="sendLineReport()">
-                            <i class="fab fa-line fa-lg me-2"></i> ส่งรายงานทาง LINE
-                        </button>
-                        <button class="btn btn-report-tg p-3 rounded-pill fw-bold" onclick="sendTelegramReport()">
-                            <i class="fab fa-telegram fa-lg me-2"></i> ส่งรายงานทาง Telegram
-                        </button>
+                        <button class="btn btn-report-line p-3 rounded-pill fw-bold" onclick="sendLineReport()"><i class="fab fa-line fa-lg me-2"></i> ส่งรายงานทาง LINE</button>
+                        <button class="btn btn-report-tg p-3 rounded-pill fw-bold" onclick="sendTelegramReport()"><i class="fab fa-telegram fa-lg me-2"></i> ส่งรายงานทาง Telegram</button>
                     </div>
 
                     <hr>
                     <h6 class="text-muted mb-3">สำรองข้อมูล</h6>
-                    <button class="btn btn-outline-dark w-100 mb-2 p-2" id="btnExport">
-                        <i class="fas fa-download me-2"></i>Backup ข้อมูล (เก็บไฟล์)
-                    </button>
-                    <button class="btn btn-outline-dark w-100 p-2" onclick="document.getElementById('fileImport').click()">
-                        <i class="fas fa-upload me-2"></i>Restore ข้อมูล (กู้คืน)
-                    </button>
+                    <button class="btn btn-outline-dark w-100 mb-2 p-2" id="btnExport"><i class="fas fa-download me-2"></i>Backup ข้อมูล (เก็บไฟล์)</button>
+                    <button class="btn btn-outline-dark w-100 p-2" onclick="document.getElementById('fileImport').click()"><i class="fas fa-upload me-2"></i>Restore ข้อมูล (กู้คืน)</button>
                     <input type="file" id="fileImport" style="display:none" accept=".json">
                     
-                    <div class="text-center mt-4 text-muted small">
-                        Budget System v2.6 (Pro Web Version)
-                    </div>
+                    <div class="text-center mt-4 text-muted small">Budget System v3.0 (Quick Action)</div>
                 </div>
             </div>
         </div>
@@ -330,14 +306,7 @@
                 { id: 32, name: "ค่าเครื่องเขียนแบบพิมพ์", budget: 1900, parent: 3, spent: 0 },
                 { id: 33, name: "ค่าบำรุงรักษาและซ่อมแซม", budget: 900, parent: 3, spent: 0 },
                 { id: 34, name: "ค่าส่วนลดเครดิต", budget: 249, parent: 3, spent: 0 },
-                { id: 35, name: "ค่าส่วนลดกรอกถัง", budget: 2324, parent: 3, spent: 0 },
-                { id: 36, name: "ค่าใช้จ่ายในการเดินทางและขนส่ง", budget: 3000, parent: 3, spent: 0 },
-                { id: 37, name: "ค่าจัดทำบัญชี", budget: 5000, parent: 3, spent: 0 },
-                { id: 38, name: "ค่าภาษีและใบอนุญาต", budget: 1008, parent: 3, spent: 0 },
-                { id: 39, name: "ค่าเบี้ยประกันภัย", budget: 1702, parent: 3, spent: 0 },
-                { id: 40, name: "ค่าใช้จ่ายเบ็ดเตล็ด", budget: 1500, parent: 3, spent: 0 },
-                { id: 41, name: "ค่าเช่าหลุมเปลี่ยนถ่าย", budget: 8450, parent: 3, spent: 0 },
-                { id: 42, name: "ค่าเฟอร์นิเจอร์สำนักงาน", budget: 1500, parent: 3, spent: 0 }
+                { id: 35, name: "ค่าส่วนลดกรอกถัง", budget: 2324, parent: 3, spent: 0 }
         ];
 
         let categories = [], expenses = [];
@@ -360,34 +329,21 @@
             const savedName = localStorage.getItem('ktp_budget_station_name');
             if(savedName) stationName = savedName;
             updateStationNameUI();
-
             const saved = localStorage.getItem(getKey());
             if (saved) {
-                const d = JSON.parse(saved);
-                categories = d.categories || [];
-                expenses = d.expenses || [];
+                const d = JSON.parse(saved); categories = d.categories || []; expenses = d.expenses || [];
                 if (categories.length === 0) categories = JSON.parse(JSON.stringify(initialCategories));
-            } else {
-                categories = JSON.parse(JSON.stringify(initialCategories));
-                expenses = [];
-            }
+            } else { categories = JSON.parse(JSON.stringify(initialCategories)); expenses = []; }
         }
         function saveData() { localStorage.setItem(getKey(), JSON.stringify({ categories, expenses })); updateUI(); }
         
         function saveStationName() {
             const name = document.getElementById('stationNameInput').value;
-            if(name && name.trim() !== "") {
-                stationName = name.trim();
-                localStorage.setItem('ktp_budget_station_name', stationName);
-                updateStationNameUI();
-                alert('เปลี่ยนชื่อสถานีเรียบร้อยครับ!');
-            }
+            if(name && name.trim() !== "") { stationName = name.trim(); localStorage.setItem('ktp_budget_station_name', stationName); updateStationNameUI(); alert('เปลี่ยนชื่อสถานีเรียบร้อยครับ!'); }
         }
-
         function updateStationNameUI() {
             document.getElementById('brandName').innerHTML = `<i class="fas fa-gas-pump me-2"></i>${stationName}`;
-            document.title = stationName;
-            document.getElementById('stationNameInput').value = stationName;
+            document.title = stationName; document.getElementById('stationNameInput').value = stationName;
         }
 
         function updateUI() {
@@ -397,58 +353,51 @@
             document.getElementById('totalRemaining').innerText = (totalBudget - totalSpent).toLocaleString();
             document.getElementById('totalBudget').innerText = totalBudget.toLocaleString();
             document.getElementById('totalSpent').innerText = totalSpent.toLocaleString();
-            renderCategories();
-            renderHistory();
-            updateDropdowns();
+            renderCategories(); renderHistory(); updateDropdowns();
         }
 
         function generateReportText() {
             const dateStr = new Date().toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
             let report = `📊 สรุปงบ ${stationName}\n📅 วันที่ ${dateStr}\n==================\n`;
-            
             const mains = categories.filter(c => c.parent === null);
             let totalB = 0, totalS = 0;
-
             mains.forEach(m => {
                 const subCats = categories.filter(c => c.parent === m.id);
                 const relatedIds = [m.id, ...subCats.map(s => s.id)];
                 const spent = expenses.filter(e => relatedIds.includes(e.categoryId)).reduce((s, e) => s + e.amount, 0);
                 const remaining = m.budget - spent;
-                
-                totalB += m.budget;
-                totalS += spent;
-
-                report += `\n🔵 ${m.name} (งบ ${m.budget.toLocaleString()})\n`;
-                report += `   💸ใช้: ${spent.toLocaleString()} | ✅เหลือ: ${remaining.toLocaleString()}\n`;
-
+                totalB += m.budget; totalS += spent;
+                report += `\n🔵 ${m.name} (งบ ${m.budget.toLocaleString()})\n   💸ใช้: ${spent.toLocaleString()} | ✅เหลือ: ${remaining.toLocaleString()}\n`;
                 subCats.forEach(s => {
                     const sSpent = expenses.filter(e => e.categoryId === s.id).reduce((sum, e) => sum + e.amount, 0);
                     const sRemaining = s.budget - sSpent;
                     report += `   ▫️ ${s.name}: เหลือ ${sRemaining.toLocaleString()}\n`;
                 });
             });
-
-            report += `\n==================\n`;
-            report += `💰 งบรวม: ${totalB.toLocaleString()}\n`;
-            report += `📉 ใช้ไปรวม: ${totalS.toLocaleString()}\n`;
-            report += `💵 คงเหลือสุทธิ: ${(totalB - totalS).toLocaleString()} บาท`;
-            
+            report += `\n==================\n💰 งบรวม: ${totalB.toLocaleString()}\n📉 ใช้ไปรวม: ${totalS.toLocaleString()}\n💵 คงเหลือสุทธิ: ${(totalB - totalS).toLocaleString()} บาท`;
             return report;
         }
 
-        // --- แก้ไข Deep Link เพื่อไม่ให้ iOS ค้าง ---
-        window.sendLineReport = () => {
-            const text = generateReportText();
-            // วิ่งเข้าแอป LINE โดยตรง ไม่เปิดแท็บใหม่
-            window.location.href = 'line://msg/text/?' + encodeURIComponent(text);
+        window.sendLineReport = () => { window.location.href = 'line://msg/text/?' + encodeURIComponent(generateReportText()); };
+        window.sendTelegramReport = () => { window.location.href = 'tg://msg?text=' + encodeURIComponent(generateReportText()); };
+
+        // เปิดป๊อปอัพจ่ายเงินแบบด่วน โดยล็อกหมวดหมู่ไว้ล่วงหน้า
+        window.quickAddExpense = (categoryId) => {
+            const select = document.getElementById('expenseCategory');
+            select.value = categoryId;
+            document.getElementById('expenseAmount').value = '';
+            document.getElementById('expenseDesc').value = '';
+            document.getElementById('expenseDate').valueAsDate = new Date();
+            const modalEl = document.getElementById('addExpenseModal');
+            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modal.show();
         };
 
-        window.sendTelegramReport = () => {
-            const text = generateReportText();
-            // วิ่งเข้าแอป Telegram โดยตรง ไม่เปิดแท็บใหม่
-            window.location.href = 'tg://msg?text=' + encodeURIComponent(text);
+        window.resetExpenseModal = () => {
+            document.getElementById('expenseCategory').value = '';
+            document.getElementById('expenseAmount').value = '';
+            document.getElementById('expenseDesc').value = '';
         };
-        // ----------------------------------------
 
         function renderCategories() {
             const list = document.getElementById('categoriesList');
@@ -463,56 +412,78 @@
                 const percent = m.budget > 0 ? (spent / m.budget) * 100 : 0;
                 const isOver = spent > m.budget;
                 const barClass = isOver ? 'bg-danger' : (percent > 90 ? 'bg-warning' : 'bg-success');
+                
                 const div = document.createElement('div');
                 div.className = 'category-item';
                 div.innerHTML = `
-                    <div class="d-flex justify-content-between align-items-center mb-1" onclick="editCategory(${m.id})">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
                         <div class="fw-bold fs-5">${m.name}</div>
-                        <div class="text-end"><div style="font-size:0.8rem" class="text-muted">งบ ${m.budget.toLocaleString()} | ใช้ ${spent.toLocaleString()}</div><div class="${remaining < 0 ? 'text-danger fw-bold' : 'text-success fw-bold'}">เหลือ ${remaining.toLocaleString()}</div></div>
+                        <div class="text-end">
+                            <div style="font-size:0.8rem" class="text-muted">งบ ${m.budget.toLocaleString()} | ใช้ ${spent.toLocaleString()}</div>
+                            <div class="${remaining < 0 ? 'text-danger fw-bold' : 'text-success fw-bold'}">เหลือ ${remaining.toLocaleString()}</div>
+                        </div>
                     </div>
-                    <div class="progress" style="height:8px;"><div class="progress-bar ${barClass}" style="width: ${Math.min(percent, 100)}%"></div></div>`;
+                    <div class="progress mb-2" style="height:8px;">
+                        <div class="progress-bar ${barClass}" style="width: ${Math.min(percent, 100)}%"></div>
+                    </div>
+                    <div class="action-btns d-flex justify-content-end gap-2 mt-2 pt-2 border-top">
+                        <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="editCategory(${m.id})"><i class="fas fa-edit"></i> แก้ไขงบ</button>
+                        <button class="btn btn-sm btn-danger rounded-pill px-3" onclick="quickAddExpense(${m.id})"><i class="fas fa-plus"></i> จ่ายเงิน</button>
+                    </div>
+                `;
+
                 subCats.forEach(s => {
                     const sSpent = expenses.filter(e => e.categoryId === s.id).reduce((sum, e) => sum + e.amount, 0);
                     const sRemaining = s.budget - sSpent;
                     const sPercent = s.budget > 0 ? (sSpent / s.budget) * 100 : 0;
                     const sOver = sSpent > s.budget;
+                    
                     const sDiv = document.createElement('div');
                     sDiv.className = 'subcategory-item';
-                    sDiv.innerHTML = `<div class="d-flex justify-content-between align-items-center" onclick="editCategory(${s.id})"><div><span>${s.name}</span></div><div class="text-end"><div style="font-size:0.75rem" class="text-muted">${sSpent.toLocaleString()} / ${s.budget.toLocaleString()}</div><div style="font-size:0.85rem" class="${sRemaining < 0 ? 'text-danger fw-bold' : 'text-success'}">เหลือ ${sRemaining.toLocaleString()}</div></div></div><div class="progress mt-1" style="height:4px;"><div class="progress-bar ${sOver?'bg-danger':'bg-secondary'}" style="width: ${Math.min(sPercent, 100)}%"></div></div>`;
+                    sDiv.innerHTML = `
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="fw-bold text-dark">${s.name}</div>
+                            <div class="text-end">
+                                <div style="font-size:0.75rem" class="text-muted">งบ ${s.budget.toLocaleString()} | ใช้ ${sSpent.toLocaleString()}</div>
+                                <div style="font-size:0.85rem" class="${sRemaining < 0 ? 'text-danger fw-bold' : 'text-success fw-bold'}">เหลือ ${sRemaining.toLocaleString()}</div>
+                            </div>
+                        </div>
+                        <div class="progress mt-1 mb-1" style="height:4px;">
+                            <div class="progress-bar ${sOver?'bg-danger':'bg-secondary'}" style="width: ${Math.min(sPercent, 100)}%"></div>
+                        </div>
+                        <div class="action-btns d-flex justify-content-between align-items-center mt-2">
+                            <button class="btn btn-sm text-secondary p-0" style="font-size:0.85rem" onclick="editCategory(${s.id})"><i class="fas fa-edit"></i> แก้ไขงบ</button>
+                            <button class="btn btn-sm text-danger p-0 fw-bold" style="font-size:0.85rem" onclick="quickAddExpense(${s.id})"><i class="fas fa-plus-circle"></i> จ่ายด่วน</button>
+                        </div>
+                    `;
                     div.appendChild(sDiv);
                 });
                 list.appendChild(div);
             });
         }
+
         function renderHistory() {
-            const list = document.getElementById('expensesHistory');
-            list.innerHTML = '';
+            const list = document.getElementById('expensesHistory'); list.innerHTML = '';
             const sorted = [...expenses].sort((a,b) => new Date(b.date) - new Date(a.date) || b.id - a.id);
             sorted.slice(0, 30).forEach(e => {
                 const cat = categories.find(c => c.id === e.categoryId);
-                const li = document.createElement('li');
-                li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                const li = document.createElement('li'); li.className = 'list-group-item d-flex justify-content-between align-items-center';
                 li.innerHTML = `<div><div class="fw-bold text-dark">${e.description || (cat?cat.name:'-')}</div><small class="text-muted">${new Date(e.date).toLocaleDateString('th-TH')} • ${cat?cat.name:'-'}</small></div><div class="d-flex align-items-center"><span class="text-danger fw-bold me-3">-${e.amount.toLocaleString()}</span><div class="btn-delete-wrapper" onclick="askDelete(${e.id})"><i class="fas fa-trash-alt"></i></div></div>`;
                 list.appendChild(li);
             });
         }
+
         function updateDropdowns() {
-            const expSelect = document.getElementById('expenseCategory');
-            const parentSelect = document.getElementById('newCatParent');
-            expSelect.innerHTML = '<option value="">-- เลือกหมวดหมู่ --</option>';
-            parentSelect.innerHTML = '';
+            const expSelect = document.getElementById('expenseCategory'); const parentSelect = document.getElementById('newCatParent');
+            expSelect.innerHTML = '<option value="">-- เลือกหมวดหมู่ --</option>'; parentSelect.innerHTML = '';
             const mains = categories.filter(c => c.parent === null);
             mains.forEach(m => {
-                expSelect.innerHTML += `<option value="${m.id}" class="fw-bold">🔵 ${m.name}</option>`;
-                parentSelect.innerHTML += `<option value="${m.id}">${m.name}</option>`;
-                categories.filter(c => c.parent === m.id).forEach(s => {
-                    expSelect.innerHTML += `<option value="${s.id}"> &nbsp;&nbsp; └ ${s.name}</option>`;
-                });
+                expSelect.innerHTML += `<option value="${m.id}" class="fw-bold">🔵 ${m.name}</option>`; parentSelect.innerHTML += `<option value="${m.id}">${m.name}</option>`;
+                categories.filter(c => c.parent === m.id).forEach(s => { expSelect.innerHTML += `<option value="${s.id}"> &nbsp;&nbsp; └ ${s.name}</option>`; });
             });
         }
 
-        document.getElementById('prevMonth').onclick = () => changeMonth(-1);
-        document.getElementById('nextMonth').onclick = () => changeMonth(1);
+        document.getElementById('prevMonth').onclick = () => changeMonth(-1); document.getElementById('nextMonth').onclick = () => changeMonth(1);
         function changeMonth(delta) { selectedMonth += delta; if(selectedMonth>11){selectedMonth=0;selectedYear++;} if(selectedMonth<0){selectedMonth=11;selectedYear--;} loadData(); updateUI(); }
         
         document.getElementById('btnSaveExpense').onclick = () => {
@@ -522,27 +493,43 @@
             const date = document.getElementById('expenseDate').value;
             if(!amt || !catId || !date) return alert('กรุณากรอกข้อมูลให้ครบ');
             expenses.push({ id: Date.now(), categoryId: catId, amount: amt, description: desc, date: date });
-            saveData();
-            bootstrap.Modal.getInstance(document.getElementById('addExpenseModal')).hide();
-            document.getElementById('expenseAmount').value = '';
-            document.getElementById('expenseDesc').value = '';
+            saveData(); bootstrap.Modal.getInstance(document.getElementById('addExpenseModal')).hide();
         };
         
         window.askDelete = (id) => { expenseToDeleteId = id; deleteModal.show(); };
         document.getElementById('confirmDeleteBtn').onclick = () => { if (expenseToDeleteId) { expenses = expenses.filter(e => e.id !== expenseToDeleteId); saveData(); deleteModal.hide(); expenseToDeleteId = null; } };
         document.getElementById('newCatType').onchange = function() { document.getElementById('parentCatGroup').style.display = (this.value==='sub')?'block':'none'; };
+        
         document.getElementById('btnAddCategory').onclick = () => {
-            const name = document.getElementById('newCatName').value;
-            const budget = parseFloat(document.getElementById('newCatBudget').value) || 0;
-            const type = document.getElementById('newCatType').value;
-            const parent = (type==='sub') ? parseInt(document.getElementById('newCatParent').value) : null;
+            const name = document.getElementById('newCatName').value; const budget = parseFloat(document.getElementById('newCatBudget').value) || 0;
+            const type = document.getElementById('newCatType').value; const parent = (type==='sub') ? parseInt(document.getElementById('newCatParent').value) : null;
             if(!name) return alert('กรุณาใส่ชื่อหมวดหมู่');
             const newId = categories.length>0 ? Math.max(...categories.map(c=>c.id))+1 : 1;
             categories.push({id:newId, name, budget, parent, spent:0}); saveData(); alert('เพิ่มหมวดหมู่สำเร็จ');
             document.getElementById('newCatName').value = ''; document.getElementById('newCatBudget').value = '';
         };
-        window.editCategory = (id) => { const c = categories.find(x=>x.id===id); if(!c) return; document.getElementById('editCatId').value = id; document.getElementById('editCatName').value = c.name; document.getElementById('editCatBudget').value = c.budget; new bootstrap.Modal(document.getElementById('editBudgetModal')).show(); };
-        document.getElementById('btnUpdateCat').onclick = () => { const id = parseInt(document.getElementById('editCatId').value); const idx = categories.findIndex(c=>c.id===id); if(idx!==-1) { categories[idx].name = document.getElementById('editCatName').value; categories[idx].budget = parseFloat(document.getElementById('editCatBudget').value) || 0; saveData(); bootstrap.Modal.getInstance(document.getElementById('editBudgetModal')).hide(); } };
+
+        window.editCategory = (id) => { 
+            const c = categories.find(x=>x.id===id); if(!c) return; 
+            document.getElementById('editCatId').value = id; 
+            document.getElementById('editCatName').value = c.name; 
+            document.getElementById('editCatBudget').value = c.budget; 
+            const modalEl = document.getElementById('editBudgetModal');
+            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modal.show(); 
+        };
+        
+        document.getElementById('btnUpdateCat').onclick = () => { 
+            const id = parseInt(document.getElementById('editCatId').value); 
+            const idx = categories.findIndex(c=>c.id===id); 
+            if(idx!==-1) { 
+                categories[idx].name = document.getElementById('editCatName').value; 
+                categories[idx].budget = parseFloat(document.getElementById('editCatBudget').value) || 0; 
+                saveData(); // <--- คำสั่งนี้จะบันทึกและให้ระบบคำนวณยอดเงินใหม่ทั้งหมดอัตโนมัติ
+                bootstrap.Modal.getInstance(document.getElementById('editBudgetModal')).hide(); 
+            } 
+        };
+        
         document.getElementById('btnDeleteCat').onclick = () => { const id = parseInt(document.getElementById('editCatId').value); if(categories.some(c=>c.parent===id)) return alert('ลบหมวดหมู่ย่อยก่อนครับ'); if(confirm('ยืนยันลบหมวดหมู่นี้?')) { categories = categories.filter(c=>c.id!==id); saveData(); bootstrap.Modal.getInstance(document.getElementById('editBudgetModal')).hide(); } };
         document.getElementById('btnCopyBudget').onclick = () => { let pm=selectedMonth-1, py=selectedYear; if(pm<0){pm=11;py--;} const pData = localStorage.getItem(`ktp_budget_${py}_${pm}`); if(pData && confirm('คัดลอกงบจากเดือนก่อนหน้า?')) { const d = JSON.parse(pData); categories = d.categories.map(c=>({...c, spent:0})); expenses = []; saveData(); alert('คัดลอกเรียบร้อย'); } else if (!pData) alert('ไม่พบข้อมูลเดือนก่อนหน้า'); };
         document.getElementById('btnReset').onclick = () => { if(confirm('ล้างข้อมูลทั้งหมด?')) { categories=[]; expenses=[]; saveData(); } };
@@ -551,5 +538,4 @@
         window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
-
 </html>
