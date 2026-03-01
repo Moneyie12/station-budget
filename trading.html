@@ -9,7 +9,8 @@
     <style>
         body { background-color: #1a1a1a; color: #eeeeee; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 15px; user-select: none;}
         .dash-container { background-color: #252525; border: 1px solid #444; padding: 20px; border-radius: 5px; max-width: 400px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.8);}
-        .title { color: #FFD700; font-weight: bold; font-size: 1.3rem; text-align: center; margin-bottom: 15px; }
+        .title { color: #FFD700; font-weight: bold; font-size: 1.3rem; text-align: center; margin-bottom: 5px; }
+        .price-display { color: #00BFFF; font-weight: bold; font-size: 1.6rem; text-align: center; margin-bottom: 20px; text-shadow: 0 0 10px rgba(0, 191, 255, 0.4); font-family: 'Courier New', Courier, monospace;}
         .data-row { display: flex; justify-content: space-between; font-size: 1rem; margin-bottom: 5px; }
         .data-label { color: #dcdcdc; }
         .data-val { color: #ffffff; font-weight: 500; }
@@ -29,6 +30,7 @@
 
     <div class="dash-container">
         <div class="title">GRIDGOLDGO</div>
+        <div class="price-display" id="v_price">XAUUSD: 0.00</div>
 
         <div class="data-row"><span class="data-label">Broker:</span><span class="data-val" id="v_broker">Loading...</span></div>
         <div class="data-row"><span class="data-label">ID:</span><span class="data-val" id="v_id">---</span></div>
@@ -65,9 +67,6 @@
     </div>
 
     <script>
-        // ==========================================
-        // 🔴 ฝังลิงก์ Firebase ไว้ให้แล้วครับ
-        // ==========================================
         const FIREBASE_DATA = "https://mt5-dashboard-985da-default-rtdb.asia-southeast1.firebasedatabase.app/mt5_data.json";
         const FIREBASE_CMD = "https://mt5-dashboard-985da-default-rtdb.asia-southeast1.firebasedatabase.app/mt5_command.json";
 
@@ -95,6 +94,11 @@
                 const d = await res.json();
                 if(!d) return;
 
+                // 🌟 อัปเดตราคาทองคำ
+                if(d.xauusd_price) {
+                    document.getElementById('v_price').innerText = "XAUUSD: " + fmt(d.xauusd_price);
+                }
+
                 document.getElementById('v_broker').innerText = d.broker;
                 document.getElementById('v_id').innerText = d.id;
                 document.getElementById('v_bal').innerText = fmt(d.balance);
@@ -108,7 +112,9 @@
                 document.getElementById('v_lottoday').innerText = fmt(d.lots_today);
                 document.getElementById('v_lottotal').innerText = fmt(d.lots_total);
                 document.getElementById('v_profday').innerText = fmt(d.prof_day);
-                document.getElementById('v_proftotal').innerText = fmt(d.proftotal);
+                // 🌟 แก้บั๊ก NaN ตรงนี้ครับ (เปลี่ยนจาก proftotal เป็น prof_total)
+                document.getElementById('v_proftotal').innerText = fmt(d.prof_total);
+                
                 document.getElementById('v_ddnow').innerText = fmt(d.dd_now) + " %";
                 document.getElementById('v_ddmax').innerText = fmt(d.dd_max) + " %";
 
