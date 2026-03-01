@@ -188,7 +188,15 @@
                 const d = await res.json();
                 if(!d) return;
 
-                if(d.xauusd_price) { document.getElementById('v_price').innerText = "XAUUSD: " + fmt(d.xauusd_price); }
+                // 🌟 ระบบดึงชื่อคู่เงินและราคาแบบอัตโนมัติ
+                if(d.current_price !== undefined) { 
+                    let symName = d.symbol_name ? d.symbol_name : "SYMBOL"; 
+                    document.getElementById('v_price').innerText = symName + ": " + fmt(d.current_price); 
+                } else if(d.xauusd_price !== undefined) { 
+                    // สำรองไว้เผื่อใช้โค้ด Python ตัวเก่า
+                    document.getElementById('v_price').innerText = "XAUUSD: " + fmt(d.xauusd_price); 
+                }
+
                 document.getElementById('v_broker').innerText = d.broker;
                 document.getElementById('v_id').innerText = d.id;
                 document.getElementById('v_bal').innerText = fmt(d.balance);
