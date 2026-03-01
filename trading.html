@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GRIDGOLDGO Terminal</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <style>
         body { background-color: #1a1a1a; color: #eeeeee; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 15px; user-select: none;}
         .dash-container { background-color: #252525; border: 1px solid #444; padding: 20px; border-radius: 5px; max-width: 400px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.8);}
@@ -21,6 +22,7 @@
         .btn-closeall { background-color: #FF0000; }
         .btn-run { background-color: #008000; }
         .btn-pause { background-color: #B22222; }
+        .chart-box { background-color: #1e1e1e; border: 1px solid #333; border-radius: 5px; padding: 10px 5px 0px 5px; margin: 15px 0; }
     </style>
 </head>
 <body>
@@ -34,7 +36,9 @@
         <div class="data-row"><span class="data-label">Equity:</span><span class="data-val" id="v_eq">0.00</span></div>
         <div class="data-row"><span class="data-label">Profit (Now):</span><span class="data-val text-green" id="v_profnow">0.00 (0 ord)</span></div>
 
-        <div class="divider"></div>
+        <div class="chart-box">
+            <div id="growthChart"></div>
+        </div>
 
         <div class="data-row"><span class="data-label">Lots (Open):</span><span class="data-val" id="v_lotopen">0.00</span></div>
         <div class="data-row"><span class="data-label">Lots (Today):</span><span class="data-val" id="v_lottoday">0.00</span></div>
@@ -62,12 +66,28 @@
 
     <script>
         // ==========================================
-        // 🔴 วางลิงก์ Firebase ของคุณตรงนี้
+        // 🔴 ฝังลิงก์ Firebase ไว้ให้แล้วครับ
         // ==========================================
         const FIREBASE_DATA = "https://mt5-dashboard-985da-default-rtdb.asia-southeast1.firebasedatabase.app/mt5_data.json";
         const FIREBASE_CMD = "https://mt5-dashboard-985da-default-rtdb.asia-southeast1.firebasedatabase.app/mt5_command.json";
 
         function fmt(num) { return parseFloat(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+        var chartOptions = {
+            series: [{ name: 'Balance', data: [] }, { name: 'Equity', data: [] }],
+            chart: { type: 'area', height: 180, toolbar: { show: false }, animations: { enabled: false } },
+            colors: ['#008FFB', '#00E396'], 
+            fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 100] } },
+            dataLabels: { enabled: false },
+            stroke: { curve: 'smooth', width: 2 },
+            xaxis: { categories: [], labels: { show: false }, axisBorder: { show: false }, axisTicks: { show: false } },
+            yaxis: { labels: { style: { colors: '#888' }, formatter: (val) => { return val.toFixed(0); } } },
+            tooltip: { theme: 'dark' },
+            grid: { borderColor: '#444', strokeDashArray: 3, padding: { top: -20, bottom: -10, left: 10 } },
+            legend: { position: 'top', horizontalAlign: 'right', labels: { colors: '#fff' } }
+        };
+        var myChart = new ApexCharts(document.querySelector("#growthChart"), chartOptions);
+        myChart.render();
 
         async function updateDashboard() {
             try {
@@ -87,32 +107,38 @@
                 document.getElementById('v_lotopen').innerText = fmt(d.lots_open);
                 document.getElementById('v_lottoday').innerText = fmt(d.lots_today);
                 document.getElementById('v_lottotal').innerText = fmt(d.lots_total);
-
                 document.getElementById('v_profday').innerText = fmt(d.prof_day);
-                document.getElementById('v_proftotal').innerText = fmt(d.prof_total);
-
+                document.getElementById('v_proftotal').innerText = fmt(d.proftotal);
                 document.getElementById('v_ddnow').innerText = fmt(d.dd_now) + " %";
                 document.getElementById('v_ddmax').innerText = fmt(d.dd_max) + " %";
 
                 const btnState = document.getElementById('btn_state');
                 if(d.is_paused) {
-                    btnState.innerText = "PAUSED";
-                    btnState.className = "btn-custom btn-pause";
+                    btnState.innerText = "PAUSED"; btnState.className = "btn-custom btn-pause";
                 } else {
-                    btnState.innerText = "RUNNING";
-                    btnState.className = "btn-custom btn-run";
+                    btnState.innerText = "RUNNING"; btnState.className = "btn-custom btn-run";
                 }
 
                 document.getElementById('v_time').innerText = "อัปเดตล่าสุด: " + d.timestamp;
+
+                if (d.chart_data && d.chart_data.length > 0) {
+                    let times = d.chart_data.map(item => item.time);
+                    let bals = d.chart_data.map(item => item.bal);
+                    let eqs = d.chart_data.map(item => item.eq);
+                    
+                    myChart.updateOptions({ xaxis: { categories: times } });
+                    myChart.updateSeries([
+                        { name: 'Balance', data: bals },
+                        { name: 'Equity', data: eqs }
+                    ]);
+                }
             } catch (e) { console.log(e); }
         }
 
         async function sendCommand(actionType) {
             if(actionType === 'CLOSE_ALL') {
-                if(!confirm("⚠️ ยืนยันการสั่งปิดออเดอร์ XAUUSD ทั้งหมดใช่หรือไม่?")) return;
+                if(!confirm("⚠️ ยืนยันการเคลียร์พอร์ต ปิดออเดอร์ทั้งหมดใช่หรือไม่?")) return;
             }
-            
-            // ส่งคำสั่งขึ้น Firebase (Python จะคอยดึงไปทำงานต่อ)
             await fetch(FIREBASE_CMD, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
@@ -121,7 +147,7 @@
         }
 
         updateDashboard();
-        setInterval(updateDashboard, 1500); // รีเฟรชหน้าจอทุก 1.5 วินาที
+        setInterval(updateDashboard, 1500); 
     </script>
 </body>
 </html>
