@@ -223,16 +223,33 @@
         }
 
         async function sendCommand(actionType) {
-            if(actionType === 'CLOSE_ALL') {
-                if(!confirm("⚠️ ยืนยันการเคลียร์พอร์ต ปิดออเดอร์ทั้งหมดใช่หรือไม่?")) return;
+            // 1. กำหนดข้อความแจ้งเตือนตามประเภทของปุ่ม
+            let actionText = "";
+            if (actionType === 'CLOSE_ALL') {
+                actionText = "🚨 อันตราย: ยืนยันคำสั่งปิดออเดอร์ทั้งหมด (CLOSE ALL)";
+            } else {
+                actionText = "⚙️ ยืนยันคำสั่งเปลี่ยนสถานะบอท (Running / Pause)";
             }
-            await fetch(FIREBASE_CMD, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ action: actionType, ts: Date.now() })
-            });
-        }
 
+            // 2. เด้งกล่องถามรหัสผ่าน 3 หลัก (แทนที่ confirm เดิม)
+            let pin = prompt(`${actionText}\nกรุณาใส่รหัสผ่าน 3 หลักเพื่อยืนยัน:`);
+
+            // 3. ตรวจสอบรหัสผ่าน (ตอนนี้ตั้งค่าไว้เป็น "999")
+            if (pin === "999") {
+                
+                // ถ้ารหัสถูก ให้ส่งคำสั่งไปที่ Firebase
+                await fetch(FIREBASE_CMD, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action: actionType, ts: Date.now() })
+                });
+                alert("✅ รหัสผ่านถูกต้อง! ส่งคำสั่งไปยัง VPS เรียบร้อยแล้ว");
+                
+            } else if (pin !== null && pin !== "") {
+                // ถ้ารหัสผิด (และไม่ได้กดปุ่ม ยกเลิก/Cancel)
+                alert("❌ รหัสผ่านไม่ถูกต้อง! ยกเลิกคำสั่ง");
+            }
+        }
         updateDashboard();
         setInterval(updateDashboard, 1500); 
     </script>
