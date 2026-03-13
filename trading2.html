@@ -5,51 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>GRIDGOLDGO - PORT 2</title>
+    <title>RICH BOT - PORT 2</title>
+    
+    <link rel="apple-touch-icon" href="iconpython.png">
+    <link rel="icon" type="image/png" href="iconpython.png">
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <style>
-        * { box-sizing: border-box; }
-        body { background-color: #1a1a1a; color: #eeeeee; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 10px; margin: 0; user-select: none; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .pin-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
-        .pin-title { color: #FFD700; font-size: 1.2rem; margin-bottom: 20px; font-weight: bold; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { 
+            background-color: #1a1a1a; 
+            color: #eeeeee; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            padding: 15px 10px; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh;
+            overflow-x: hidden; 
+        }
+        .pin-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100vh; position: fixed; top:0; left:0; background: #1a1a1a; z-index: 2000; }
+        .pin-title { color: #00BFFF; font-size: 1.2rem; margin-bottom: 20px; font-weight: bold; }
         .pin-dots { display: flex; gap: 20px; margin-bottom: 40px; }
-        .dot { width: 15px; height: 15px; border-radius: 50%; border: 2px solid #FFD700; transition: 0.2s; }
-        .dot.active { background-color: #FFD700; box-shadow: 0 0 10px #FFD700; }
+        .dot { width: 15px; height: 15px; border-radius: 50%; border: 2px solid #00BFFF; transition: 0.2s; }
+        .dot.active { background-color: #00BFFF; box-shadow: 0 0 10px #00BFFF; }
         .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
         .num-btn { width: 70px; height: 70px; border-radius: 50%; background-color: #252525; border: 1px solid #444; color: white; font-size: 1.5rem; font-weight: bold; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.5); }
         .num-btn:active { background-color: #444; transform: scale(0.95); }
         .num-btn.clear-btn { color: #FF4500; font-size: 1.2rem; }
-        .dash-container { background-color: #252525; border: 1px solid #444; padding: 15px; border-radius: 12px; width: 100%; max-width: 450px; box-shadow: 0 8px 25px rgba(0,0,0,0.9); display: none; }
+        
+        .dash-container { background-color: #252525; border: 1px solid #444; padding: 15px; border-radius: 12px; width: 100%; max-width: 450px; box-shadow: 0 8px 25px rgba(0,0,0,0.9); display: none; margin-top: 10px; margin-bottom: 20px;}
+        
         .logo-container { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; margin-top: 5px; }
         .logo-text { font-size: clamp(1.3rem, 6vw, 1.6rem); font-weight: 900; letter-spacing: 0.5px; font-family: 'Arial Black', Impact, sans-serif; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
-        .txt-grid { color: #ffffff; } .txt-gold { color: #FFD700; } .txt-go { color: #00FF7F; }
+        .txt-rich { color: #ffffff; } .txt-bot { color: #00BFFF; }
+        
         .price-display { color: #00BFFF; font-weight: bold; font-size: clamp(1.3rem, 6vw, 1.7rem); text-align: center; margin-bottom: 20px; text-shadow: 0 0 10px rgba(0, 191, 255, 0.4); font-family: 'Courier New', Courier, monospace;}
         .data-row { display: flex; justify-content: space-between; align-items: center; font-size: clamp(0.9rem, 4vw, 1rem); margin-bottom: 6px; }
         .data-label { color: #dcdcdc; } .data-val { color: #ffffff; font-weight: 500; text-align: right;}
         .divider { border-bottom: 1px dashed #666; margin: 12px 0; }
         .text-green { color: #00FF00 !important; } .text-red { color: #FF4500 !important; }
-        .btn-panel { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-custom { flex: 1; padding: 12px 5px; font-weight: bold; font-size: clamp(0.8rem, 3.5vw, 1rem); border: none; border-radius: 6px; cursor: pointer; color: white; transition: 0.1s; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .btn-custom:active { transform: scale(0.95); box-shadow: 0 1px 2px rgba(0,0,0,0.3); }
-        .btn-closeall { background-color: #d32f2f; } .btn-run { background-color: #2e7d32; } .btn-pause { background-color: #c2185b; }
+        
         .chart-box { background-color: #1e1e1e; border: 1px solid #333; border-radius: 8px; padding: 10px 5px 0px 5px; margin: 15px 0; width: 100%;}
+        
+        .btn-panel { display: flex; gap: 8px; margin-top: 20px; width: 100%; }
+        .btn-custom { flex: 1; padding: 12px 2px; font-weight: bold; font-size: clamp(0.8rem, 3.5vw, 0.95rem); border: none; border-radius: 6px; cursor: pointer; color: white; transition: 0.1s; box-shadow: 0 4px 6px rgba(0,0,0,0.3); text-align: center; }
+        .btn-custom:active { transform: scale(0.95); box-shadow: 0 1px 2px rgba(0,0,0,0.3); }
+        .btn-closeall { background-color: #d32f2f; } 
+        .btn-setting { background-color: #0277bd; } 
+        .btn-run { background-color: #2e7d32; } 
+        .btn-pause { background-color: #c2185b; }
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); z-index: 3000; justify-content: center; align-items: center; padding: 15px; }
+        .modal-content { background-color: #252525; border: 1px solid #444; padding: 20px; border-radius: 12px; width: 100%; max-width: 380px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); position: relative; }
+        .modal-title { color: #00BFFF; font-weight: bold; font-size: 1.1rem; margin-bottom: 15px; border-bottom: 1px solid #444; padding-bottom: 10px; text-align: center; }
+        .close-btn { position: absolute; top: 15px; right: 20px; color: #aaa; font-size: 1.5rem; font-weight: bold; cursor: pointer; }
+        .input-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.9rem; color: #ccc;}
+        .input-row input { width: 80px; background: #1a1a1a; color: white; border: 1px solid #555; text-align: center; padding: 6px; border-radius: 4px;}
+        .btn-save { width: 100%; background: #00BFFF; color: #000; padding: 12px; border: none; font-weight: bold; border-radius: 6px; margin-top: 15px; font-size: 1rem;}
     </style>
 </head>
 <body>
     <div class="pin-screen" id="pinScreen">
-        <div class="logo-container" style="margin-bottom: 30px;">
-            <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <defs><linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFEA70" /><stop offset="50%" stop-color="#FFD700" /><stop offset="100%" stop-color="#D4AF37" /></linearGradient></defs>
-                <rect x="5" y="5" width="90" height="90" rx="20" fill="#111" stroke="url(#goldGradient)" stroke-width="3"/>
-                <line x1="35" y1="5" x2="35" y2="95" stroke="#333" stroke-width="1"/><line x1="65" y1="5" x2="65" y2="95" stroke="#333" stroke-width="1"/>
-                <line x1="5" y1="35" x2="95" y2="35" stroke="#333" stroke-width="1"/><line x1="5" y1="65" x2="95" y2="65" stroke="#333" stroke-width="1"/>
-                <rect x="22" y="60" width="12" height="20" rx="2" fill="url(#goldGradient)"/><rect x="44" y="45" width="12" height="35" rx="2" fill="url(#goldGradient)"/><rect x="66" y="25" width="12" height="55" rx="2" fill="url(#goldGradient)"/>
-                <polyline points="15,65 44,40 60,52 78,23.2" fill="none" stroke="#00FF7F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                <polygon points="4,0 -12,-8 -8,0 -12,8" fill="#00FF7F" transform="translate(80, 20) rotate(-58)"/>
-            </svg>
-        </div>
-        <div class="pin-title" id="pinTitle">ป้อนรหัสผ่าน (พอร์ต 2)</div>
+        <div class="pin-title" id="pinTitle">ป้อนรหัสผ่าน (RICH BOT)</div>
         <div class="pin-dots">
             <div class="dot" id="dot1"></div><div class="dot" id="dot2"></div><div class="dot" id="dot3"></div><div class="dot" id="dot4"></div>
         </div>
@@ -63,16 +83,7 @@
 
     <div class="dash-container" id="mainApp">
         <div class="logo-container">
-            <svg width="45" height="45" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <defs><linearGradient id="goldGradient2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#FFEA70" /><stop offset="50%" stop-color="#FFD700" /><stop offset="100%" stop-color="#D4AF37" /></linearGradient></defs>
-                <rect x="5" y="5" width="90" height="90" rx="20" fill="#111" stroke="url(#goldGradient2)" stroke-width="3"/>
-                <line x1="35" y1="5" x2="35" y2="95" stroke="#333" stroke-width="1"/><line x1="65" y1="5" x2="65" y2="95" stroke="#333" stroke-width="1"/>
-                <line x1="5" y1="35" x2="95" y2="35" stroke="#333" stroke-width="1"/><line x1="5" y1="65" x2="95" y2="65" stroke="#333" stroke-width="1"/>
-                <rect x="22" y="60" width="12" height="20" rx="2" fill="url(#goldGradient2)"/><rect x="44" y="45" width="12" height="35" rx="2" fill="url(#goldGradient2)"/><rect x="66" y="25" width="12" height="55" rx="2" fill="url(#goldGradient2)"/>
-                <polyline points="15,65 44,40 60,52 78,23.2" fill="none" stroke="#00FF7F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                <polygon points="4,0 -12,-8 -8,0 -12,8" fill="#00FF7F" transform="translate(80, 20) rotate(-58)"/>
-            </svg>
-            <div class="logo-text"><span class="txt-grid">GRID</span><span class="txt-gold">GOLD</span><span class="txt-go">GO</span></div>
+            <div class="logo-text"><span class="txt-rich">RICH</span> <span class="txt-bot">BOT</span></div>
         </div>
 
         <div class="price-display" id="v_price">Loading...</div>
@@ -97,15 +108,34 @@
 
         <div class="btn-panel">
             <button class="btn-custom btn-closeall" onclick="sendCommand('CLOSE_ALL')">CLOSE ALL</button>
-            <button class="btn-custom btn-run" id="btn_state" onclick="sendCommand('TOGGLE_RUN')">RUNNING</button>
+            <button class="btn-custom btn-setting" onclick="openSetting()">SETTING</button>
+            <button class="btn-custom btn-pause" id="btn_state" onclick="sendCommand('TOGGLE_RUN')">PAUSED</button>
         </div>
+        
         <div style="text-align: center; color: #555; font-size: 0.75rem; margin-top: 15px;"><span id="v_time">รอการเชื่อมต่อฐานข้อมูล...</span></div>
+    </div>
+
+    <div class="modal-overlay" id="settingModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeSetting()">&times;</span>
+            <div class="modal-title">⚙️ ตั้งค่าพารามิเตอร์</div>
+            <form id="configForm">
+                <div class="input-row"><span>START_LOT</span><input type="number" step="0.01" id="cfg_lot"></div>
+                <div class="input-row"><span>GRID ระยะ (จุด)</span><input type="number" id="cfg_dist"></div>
+                <div class="input-row"><span>คูณระยะถ่าง</span><input type="number" step="0.1" id="cfg_dist_m"></div>
+                <div class="input-row"><span>คูณ Lot (Martingale)</span><input type="number" step="0.1" id="cfg_mart"></div>
+                <div class="input-row"><span>จำนวนไม้สูงสุด</span><input type="number" id="cfg_layers"></div>
+                <div class="input-row"><span>เป้ากำไรรวบปิด ($)</span><input type="number" step="0.1" id="cfg_tp"></div>
+                <div class="input-row"><span>ยอมตัดขาดทุน ($)</span><input type="number" step="0.1" id="cfg_sl"></div>
+                <button type="button" class="btn-save" onclick="saveConfig()">💾 ยืนยันการเปลี่ยนแปลง</button>
+            </form>
+        </div>
     </div>
 
     <script>
         const SECRET_PIN = "8888"; 
-        
         let currentPin = "";
+        
         function updateDots() {
             for(let i=1; i<=4; i++) {
                 let dot = document.getElementById('dot'+i);
@@ -115,16 +145,11 @@
         }
         function enterPin(num) {
             if(currentPin.length < 4) {
-                currentPin += num;
-                updateDots();
-                if(currentPin.length === 4) { setTimeout(() => { checkPin(); }, 150); }
+                currentPin += num; updateDots();
+                if(currentPin.length === 4) setTimeout(checkPin, 150);
             }
         }
-        function clearPin() {
-            currentPin = ""; updateDots();
-            document.getElementById('pinTitle').innerText = "ป้อนรหัสผ่าน (พอร์ต 2)";
-            document.getElementById('pinTitle').style.color = "#FFD700";
-        }
+        function clearPin() { currentPin = ""; updateDots(); document.getElementById('pinTitle').style.color = "#00BFFF"; document.getElementById('pinTitle').innerText = "ป้อนรหัสผ่าน (RICH BOT)";}
         function checkPin() {
             if(currentPin === SECRET_PIN) {
                 document.getElementById('pinScreen').style.display = 'none';
@@ -137,14 +162,18 @@
             }
         }
 
+        // ลิงก์ Firebase ของพอร์ต 2 (mt5_data2.json)
         const FIREBASE_DATA = "https://mt5-dashboard-985da-default-rtdb.asia-southeast1.firebasedatabase.app/mt5_data2.json";
         const FIREBASE_CMD = "https://mt5-dashboard-985da-default-rtdb.asia-southeast1.firebasedatabase.app/mt5_command2.json";
 
-        function fmt(num) { return parseFloat(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+        function fmt(num) { 
+            if (num === undefined || num === null || isNaN(num)) return "0.00";
+            return parseFloat(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); 
+        }
 
         var chartOptions = {
             series: [{ name: 'Balance', data: [] }, { name: 'Equity', data: [] }],
-            chart: { type: 'area', height: 180, toolbar: { show: false }, animations: { enabled: false }, parentHeightOffset: 0 },
+            chart: { type: 'area', height: 180, toolbar: { show: false }, animations: { enabled: false } },
             colors: ['#008FFB', '#00E396'], fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.4, opacityTo: 0.05, stops: [0, 100] } },
             dataLabels: { enabled: false }, stroke: { curve: 'smooth', width: 2 },
             xaxis: { categories: [], labels: { show: false }, axisBorder: { show: false }, axisTicks: { show: false } },
@@ -155,6 +184,8 @@
         var myChart = new ApexCharts(document.querySelector("#growthChart"), chartOptions);
         myChart.render();
 
+        let configLoaded = false;
+
         async function updateDashboard() {
             if(document.getElementById('mainApp').style.display !== 'block') return;
 
@@ -164,18 +195,20 @@
                 if(!d) return;
 
                 if(d.current_price !== undefined) { 
-                    let symName = d.symbol_name ? d.symbol_name : "BTCUSDm"; 
+                    let symName = d.symbol_name ? d.symbol_name : "XAUUSD"; 
                     document.getElementById('v_price').innerText = symName + ": " + fmt(d.current_price); 
                 }
 
-                document.getElementById('v_broker').innerText = d.broker;
-                document.getElementById('v_id').innerText = d.id;
+                document.getElementById('v_broker').innerText = d.broker || "Loading...";
+                document.getElementById('v_id').innerText = d.id || "---";
                 document.getElementById('v_bal').innerText = fmt(d.balance);
                 document.getElementById('v_eq').innerText = fmt(d.equity);
                 
+                const profNowVal = d.profit_now !== undefined ? d.profit_now : 0;
+                const ordCount = d.ord_count !== undefined ? d.ord_count : 0;
                 const profNow = document.getElementById('v_profnow');
-                profNow.innerText = `${fmt(d.profit_now)} (${d.ord_count} ord)`;
-                profNow.className = d.profit_now < 0 ? "data-val text-red" : "data-val text-green";
+                profNow.innerText = `${fmt(profNowVal)} (${ordCount} ord)`;
+                profNow.className = profNowVal < 0 ? "data-val text-red" : "data-val text-green";
 
                 document.getElementById('v_lotopen').innerText = fmt(d.lots_open);
                 document.getElementById('v_lottoday').innerText = fmt(d.lots_today);
@@ -189,7 +222,7 @@
                 if(d.is_paused) { btnState.innerText = "PAUSED"; btnState.className = "btn-custom btn-pause"; } 
                 else { btnState.innerText = "RUNNING"; btnState.className = "btn-custom btn-run"; }
 
-                document.getElementById('v_time').innerText = "อัปเดตล่าสุด: " + d.timestamp;
+                document.getElementById('v_time').innerText = "อัปเดตล่าสุด: " + (d.timestamp || "---");
 
                 if (d.chart_data && d.chart_data.length > 0) {
                     let times = d.chart_data.map(item => item.time);
@@ -198,39 +231,62 @@
                     myChart.updateOptions({ xaxis: { categories: times } });
                     myChart.updateSeries([{ name: 'Balance', data: bals }, { name: 'Equity', data: eqs }]);
                 }
+
+                if(!configLoaded && d.config) {
+                    document.getElementById('cfg_lot').value = d.config.START_LOT;
+                    document.getElementById('cfg_dist').value = d.config.GRID_DIST_POINTS;
+                    document.getElementById('cfg_dist_m').value = d.config.GRID_DIST_MULT;
+                    document.getElementById('cfg_mart').value = d.config.MARTINGALE_MULT;
+                    document.getElementById('cfg_layers').value = d.config.MAX_LAYERS;
+                    document.getElementById('cfg_tp').value = d.config.TARGET_PROFIT_MONEY;
+                    document.getElementById('cfg_sl').value = d.config.MAX_DRAWDOWN_MONEY;
+                    configLoaded = true;
+                }
             } catch (e) { console.log(e); }
         }
 
         async function sendCommand(actionType) {
-            // 1. กำหนดข้อความแจ้งเตือนตามประเภทของปุ่ม
-            let actionText = "";
-            if (actionType === 'CLOSE_ALL') {
-                actionText = "🚨 อันตราย: ยืนยันคำสั่งปิดออเดอร์ทั้งหมด (CLOSE ALL)";
-            } else {
-                actionText = "⚙️ ยืนยันคำสั่งเปลี่ยนสถานะบอท (Running / Pause)";
-            }
-
-            // 2. เด้งกล่องถามรหัสผ่าน 3 หลัก (แทนที่ confirm เดิม)
+            let actionText = actionType === 'CLOSE_ALL' ? "🚨 อันตราย: ยืนยันคำสั่งปิดออเดอร์ทั้งหมด (CLOSE ALL)" : "⚙️ ยืนยันคำสั่งเปลี่ยนสถานะบอท (Running / Pause)";
             let pin = prompt(`${actionText}\nกรุณาใส่รหัสผ่าน 3 หลักเพื่อยืนยัน:`);
-
-            // 3. ตรวจสอบรหัสผ่าน (ตอนนี้ตั้งค่าไว้เป็น "999")
             if (pin === "999") {
-                
-                // ถ้ารหัสถูก ให้ส่งคำสั่งไปที่ Firebase
                 await fetch(FIREBASE_CMD, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ action: actionType, ts: Date.now() })
                 });
-                alert("✅ รหัสผ่านถูกต้อง! ส่งคำสั่งไปยัง VPS เรียบร้อยแล้ว");
-                
+                alert("✅ ส่งคำสั่งไปยังเซิร์ฟเวอร์เรียบร้อยแล้ว");
             } else if (pin !== null && pin !== "") {
-                // ถ้ารหัสผิด (และไม่ได้กดปุ่ม ยกเลิก/Cancel)
                 alert("❌ รหัสผ่านไม่ถูกต้อง! ยกเลิกคำสั่ง");
             }
         }
 
-        updateDashboard();
+        function openSetting() { document.getElementById('settingModal').style.display = 'flex'; }
+        function closeSetting() { document.getElementById('settingModal').style.display = 'none'; }
+
+        async function saveConfig() {
+            let pin = prompt("ยืนยันการเปลี่ยนกลยุทธ์\nกรุณาใส่รหัสผ่าน 3 หลัก:");
+            if(pin === "999") {
+                const newCfg = {
+                    START_LOT: parseFloat(document.getElementById('cfg_lot').value),
+                    GRID_DIST_POINTS: parseInt(document.getElementById('cfg_dist').value),
+                    GRID_DIST_MULT: parseFloat(document.getElementById('cfg_dist_m').value),
+                    MARTINGALE_MULT: parseFloat(document.getElementById('cfg_mart').value),
+                    MAX_LAYERS: parseInt(document.getElementById('cfg_layers').value),
+                    TARGET_PROFIT_MONEY: parseFloat(document.getElementById('cfg_tp').value),
+                    MAX_DRAWDOWN_MONEY: parseFloat(document.getElementById('cfg_sl').value)
+                };
+                await fetch(FIREBASE_CMD, { 
+                    method: "PUT", 
+                    headers: { "Content-Type": "application/json" }, 
+                    body: JSON.stringify({ action: "UPDATE_CONFIG", config_data: newCfg, ts: Date.now() }) 
+                });
+                alert("✅ อัปเดตการตั้งค่าสำเร็จ!");
+                closeSetting(); 
+            } else if (pin !== null) {
+                alert("❌ รหัสผ่านไม่ถูกต้อง");
+            }
+        }
+
         setInterval(updateDashboard, 1500); 
     </script>
 </body>
